@@ -1,16 +1,6 @@
 #!/usr/bin/env bash
 set -e
 
-for ARGUMENT in "$@"
-do
-   KEY=$(echo $ARGUMENT | cut -f1 -d=)
-
-   KEY_LENGTH=${#KEY}
-   VALUE="${ARGUMENT:$KEY_LENGTH+1}"
-
-   export "$KEY"="$VALUE"
-done
-
 echo "::group::Run CodeSigner"
 
 echo "Running ESigner.com CodeSign Action ====>"
@@ -30,7 +20,7 @@ COMMAND="cd /codesign; java -cp '.:/codesign/jar/*' com.ssl.code.signing.tool.Co
 
 RESULT=$(sh -c "set -e; $COMMAND")
 
-if [[ "$RESULT" =~ .*"Error".* || "$RESULT" =~ "" ]]; then
+if [[ "$RESULT" =~ .*"Error".* ]]; then
   echo "::error::Something Went Wrong. Please try again."
   echo "::error::$RESULT"
   exit 1
